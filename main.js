@@ -1,4 +1,4 @@
-var bitcoinCalculator = angular.module('bitcoinCalculator', []);
+var bitcoinCalculator = angular.module('bitcoinCalculator', ['nvd3ChartDirectives']);
 bitcoinCalculator.controller('bitcoinController', ($scope, $http) => {
   $http.get('https://bitpay.com/api/rates')
     .success(data => {
@@ -11,5 +11,16 @@ bitcoinCalculator.controller('bitcoinController', ($scope, $http) => {
       $scope.initialAmt = 5000;
       $scope.newAmt = price => { return price / $scope.currRate * $scope.initialAmt; };
       $scope.profit = price => { return price / $scope.currRate * $scope.initialAmt - $scope.initialAmt; };
-    });
+
+      $scope.xAxisTickFormatFunction = () => {
+        return date => {
+          return d3.time.format('%x')(new Date(date));
+        };
+      };
+
+      $scope.bitcoinHistoricalData = [{
+        'key': 'Prices',
+        'values': values //use sample price data in prices.js
+      }];
+  });
 });
